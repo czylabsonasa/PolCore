@@ -6,8 +6,6 @@
 import Pkg
 Pkg.activate(;temp=true)
 Pkg.add(;url="https://github.com/czylabsonasa/PolCore")
-Pkg.add("Polynomials") # for testing
-import Polynomials: Polynomial, derivative
 ...
 
 ```
