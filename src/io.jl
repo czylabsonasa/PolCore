@@ -1,5 +1,14 @@
-using StatsBase
+# old, but works:
+# https://stackoverflow.com/questions/28793623/julia-interpolation-of-own-type-with-string/36050956#36050956
+Base.show(io::IO, x::Rational)=print(io, if x.den==1
+    "$(x.num)"
+  else
+    "$(x.num)/$(x.den)"
+  end
+)
 
+
+using StatsBase # not a must, used only to order=:rand
 """
     Base.string(p::AbstractPol;<keyword arguments>)
 
@@ -8,7 +17,8 @@ using StatsBase
 * order: a Symbol -> :inc, :dec, :rand, default is :inc
 * digits: used for Float coeff (pts), default is 4
 """
-function Base.string(
+function Base.show(
+  io::IO,
   p::AbstractPol ;
   var="x",
   order=:inc,
@@ -27,11 +37,11 @@ function Base.string(
   else
     coeff=p.coeff
     if hasproperty(p,:pts)
-      pts=p.coeff
+      pts=p.pts
     end
   end
 
-  (deg==0) && (return string(coeff[1]))
+  (deg==0) && print(io,string(coeff[1]))
 
 
   vars=if hasproperty(p,:pts)
@@ -81,5 +91,5 @@ function Base.string(
   end
   
   ret[1]=(" + "==ret[1] ? "" : "-")
-  join(ret)
+  print(io,join(ret))
 end
