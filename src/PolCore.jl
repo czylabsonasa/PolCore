@@ -30,12 +30,12 @@ module PolCore
     isempty(coeff) && error("pol: empty coeff vector")
     T=typeof(coeff[1])
     if isempty(pts) 
-      PolC{T}(coeff)
+      PolC{T}(coeff[:])
     else
       #println(length(coeff)," ",length(pts))
       (length(coeff)!=length(pts)) && error("pol: if pts>[] then it must be length(coeff) sized")
       T=promote_type(T,typeof(pts[1]))
-      PolN{T}(T.(coeff),T.(pts))
+      PolN{T}(T.(coeff[:]),T.(pts[:]))
     end
   end
   export pol

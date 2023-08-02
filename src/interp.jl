@@ -24,5 +24,5 @@ function interp_L(t,f)
     end
     coeff[j+1]=act[1]
   end
-  pol(coeff,t)
+  pol(coeff,copy(t))
 end
