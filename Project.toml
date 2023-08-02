@@ -2,3 +2,6 @@ name = "PolCore"
 uuid = "8a56efb8-9153-4141-bcd1-457dba4c673a"
 authors = ["czylabsonasa <czylabson.asa@gmail.com>"]
 version = "0.1.0"
+
+[deps]
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
