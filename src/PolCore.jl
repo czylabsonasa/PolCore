@@ -16,12 +16,16 @@ module PolCore
   struct PolC{T<:Real} <: AbstractPol
     coeff::Vector{T}
   end
+  export PolC
+
 
   # Newton
   struct PolN{T<:Real} <: AbstractPol
     coeff::Vector{T}
     pts::Vector{T}
   end
+  export PolN
+
 
 
 
@@ -43,15 +47,15 @@ module PolCore
 
   function (p::AbstractPol)(x)
     np=length(p.coeff)
-    px=p.coeff[np]
-    if !hasproperty(p, :pts)
-      for k in np-1:-1:1
-        px=px*x+p.coeff[k]
-      end
+    rule=if hasproperty(p, :pts)
+      (px,k)->px*(x-p.pts[k])+p.coeff[k]
     else
-      for k in np-1:-1:1
-        px=px*(x-p.pts[k])+p.coeff[k]
-      end
+      (px,k)->px*x+p.coeff[k]
+    end
+
+    px=p.coeff[np]
+    for k in np-1:-1:1
+      ps=rule(px,k)
     end
     px
   end
@@ -61,8 +65,8 @@ module PolCore
 
 
   #printstyled("include interp.jl\n",color=:light_yellow)
-  include("interp.jl")
-  export interp_L
+  include("interpol.jl")
+  export interpol_L
 
 
   include("io.jl") # for Base.string

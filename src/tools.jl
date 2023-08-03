@@ -8,3 +8,17 @@ function Base.adjoint(p::AbstractPol)
 end
 
 
+function Base.convert(PolC,p::PolN)
+  act=similar(p.coeff)
+  prev=similar(p.coeff)
+  n=length(p.coeff)
+  act[1]=p.coeff[n]
+  for k in n-1:-1:1
+    act,prev=prev,act
+    act[1]=p.coeff[k] # px -> ... + coeff[k]
+    act[2:n-k+1]=prev[1:n-k] # px -> px*x
+    act[1:n-k].-=p.pts[k]*prev[1:n-k]
+  end
+  PolC{typeof(act[1])}(act)
+  
+end
