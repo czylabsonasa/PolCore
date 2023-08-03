@@ -2,17 +2,20 @@
     module PolCore
     
 * minimalistic polynomial toolset
+  * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
 * the coefficients are stored in increasing degree
 * "features":
+  * types: PolC -> classical, PolN -> Newton-form
+  * brute-force convert PolN to PolC (easier to comp. the derivative)
   * evaluation by `()`
   * derivative by `adjoint` (the apostrophe)
-  * Lagrangian interpolation: interp_L
-* reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
+  * Lagrangian interpolation: interpol_L
 """
+
 module PolCore
   abstract type AbstractPol end
 
-  # classical (0-based)
+  # classical-form
   struct PolC{T<:Real} <: AbstractPol
     coeff::Vector{T}
   end
@@ -29,22 +32,24 @@ module PolCore
 
 
 
-  function pol(coeff,pts=[])
+  function Pol(coeff,pts=[])
     #printstyled("$(length(pts)) --- $(length(coeff))\n",color=:light_green);flush(stdout)
-    isempty(coeff) && error("pol: empty coeff vector")
+    err(x)=error("Pol -> $(x)")
+    isempty(coeff) && err("empty coeff vector")
     T=typeof(coeff[1])
     if isempty(pts) 
       PolC{T}(coeff[:])
     else
       #println(length(coeff)," ",length(pts))
-      (length(coeff)!=length(pts)) && error("pol: if pts>[] then it must be length(coeff) sized")
+      (length(coeff)!=length(pts)) && err("if pts>[] then it must be length(coeff) sized")
       T=promote_type(T,typeof(pts[1]))
       PolN{T}(T.(coeff[:]),T.(pts[:]))
     end
   end
-  export pol
+  export Pol
 
 
+  # evaluation by Horner 
   function (p::AbstractPol)(x)
     np=length(p.coeff)
     rule=if hasproperty(p, :pts)
@@ -55,7 +60,7 @@ module PolCore
 
     px=p.coeff[np]
     for k in np-1:-1:1
-      ps=rule(px,k)
+      px=rule(px,k)
     end
     px
   end
@@ -66,7 +71,7 @@ module PolCore
 
   #printstyled("include interp.jl\n",color=:light_yellow)
   include("interpol.jl")
-  export interpol_L
+  export interpol_L, interpol_H
 
 
   include("io.jl") # for Base.string

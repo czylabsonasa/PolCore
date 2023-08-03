@@ -4,7 +4,7 @@ function Base.adjoint(p::AbstractPol)
   coeff=p.coeff[2:end]
   isempty(coeff) && (coeff=[zero(T)])
   coeff=coeff.*(1:length(coeff))
-  pol(coeff)
+  Pol(coeff)
 end
 
 

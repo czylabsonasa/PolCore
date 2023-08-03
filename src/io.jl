@@ -9,7 +9,7 @@ using StatsBase # not a must, used only to order=:rand
 # Arguments
 * var: a String used as a variable name, default "x"
 * order: a Symbol -> :inc, :dec, :rand, default is :inc
-* digits: used for Float coeff (pts), default is 4
+* digits: num. of digs. used for Float coeff (+pts), default is 4
 """
 function Base.show(
   io::IO,
