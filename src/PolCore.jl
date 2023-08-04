@@ -1,4 +1,4 @@
-__precompile__()
+# __precompile__()
 
 
 """
@@ -8,13 +8,15 @@ __precompile__()
   * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
 * "features":
   * types: PolC -> classical, PolN -> Newton-form
+    * both are OffsetArray based
   * brute-force convert PolN to PolC (easier to comp. the derivative)
   * evaluation by `()`
   * derivative by `adjoint` (the apostrophe)
   * Lagrangian interpolation: interpol_L
 """
 module PolCore
-
+    using OffsetArrays
+    
 """
     AbstractPol
 
@@ -26,14 +28,14 @@ module PolCore
 @doc raw"""
     struct PolC
 
-* field: `coeff::Vector{T}`
+* field: `coeff::OffsetArray{T}`
 * polynomials in classical-form: 
 ```math
-p(x)=\sum_{k=0}^n coeff[k+1]x^k
+p(x)=\sum_{k=0}^n coeff[k]x^k
 ```
 """
   struct PolC{T<:Real} <: AbstractPol
-    coeff::Vector{T}
+    coeff::OffsetArray{T}
   end
   export PolC
 
@@ -53,8 +55,8 @@ n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i+1])
 note, that the empty product is 1.
 """
   struct PolN{T<:Real} <: AbstractPol
-    coeff::Vector{T}
-    pts::Vector{T}
+    coeff::OffsetArray{T}
+    pts::OffsetArray{T}
   end
   export PolN
 
@@ -65,14 +67,18 @@ note, that the empty product is 1.
     #printstyled("$(length(pts)) --- $(length(coeff))\n",color=:light_green);flush(stdout)
     err(x)=error("Pol -> $(x)")
     isempty(coeff) && err("empty coeff vector")
-    T=typeof(coeff[1])
+    T=eltype(coeff)
+    deg=length(coeff)-1
     if isempty(pts) 
-      PolC{T}(coeff[:])
+      PolC{T}(OffsetArray{T}(coeff,0:deg))
     else
       #println(length(coeff)," ",length(pts))
       (length(coeff)!=length(pts)) && err("if pts>[] then it must be length(coeff) sized")
       T=promote_type(T,typeof(pts[1]))
-      PolN{T}(T.(coeff[:]),T.(pts[:]))
+      PolN{T}(
+        OffsetArray{T}(coeff,0:deg),
+        OffsetArray{T}(pts,0:deg),
+      )
     end
   end
   export Pol
@@ -80,15 +86,15 @@ note, that the empty product is 1.
 
   # evaluation by Horner 
   function (p::AbstractPol)(x)
-    np=length(p.coeff)
     rule=if hasproperty(p, :pts)
       (px,k)->px*(x-p.pts[k])+p.coeff[k]
     else
       (px,k)->px*x+p.coeff[k]
     end
+    deg=length(p.coeff)-1
 
-    px=p.coeff[np]
-    for k in np-1:-1:1
+    px=p.coeff[deg]
+    for k in deg-1:-1:0
       px=rule(px,k)
     end
     px

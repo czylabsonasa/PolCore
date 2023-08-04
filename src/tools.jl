@@ -3,28 +3,30 @@
 """
 function Base.adjoint(p::AbstractPol)
   hasproperty(p,:pts) && error("PolCore: derivative is not implemented for Newtonian-form")
-  T=typeof(p.coeff[1])
-  coeff=p.coeff[2:end]
+  T=eltype(p.coeff)
+  coeff=p.coeff[1:deg]
   isempty(coeff) && (coeff=[zero(T)])
-  coeff=coeff.*(1:length(coeff))
+  coeff=coeff.*(1:deg)
   Pol(coeff)
 end
 
 
 """
     converts from Newton to classical
+
+* essentially Horner method -> brute force
 """
 function Base.convert(::Type{PolC},p::PolN)
   act=similar(p.coeff)
   prev=similar(p.coeff)
-  n=length(p.coeff)
-  act[1]=p.coeff[n]
-  for k in n-1:-1:1
+  deg=length(p.coeff)-1
+  act[0]=p.coeff[deg]
+  for k in deg-1:-1:0
     act,prev=prev,act
-    act[1]=p.coeff[k] # px -> ... + coeff[k]
-    act[2:n-k+1]=prev[1:n-k] # px -> px*x
-    act[1:n-k].-=p.pts[k]*prev[1:n-k]
+    act[0]=p.coeff[k] # px -> ... + coeff[k]
+    act[1:deg-k]=prev[0:deg-k-1] # px -> px*x
+    act[0:deg-k-1].-=p.pts[k]*prev[0:deg-k-1]
   end
-  PolC{typeof(act[1])}(act)
+  Pol(act)
   
 end

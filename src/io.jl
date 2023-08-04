@@ -4,7 +4,7 @@
 
 using StatsBase # not a must, used only to order=:rand
 """
-    Base.string(p::AbstractPol;<keyword arguments>)
+    Base.show(p::AbstractPol;<keyword arguments>)
 
 # Arguments
 * var: a String used as a variable name, default "x"
@@ -31,7 +31,7 @@ function Base.show(
   
   deg=length(p.coeff)-1
 
-  T=typeof(p.coeff[1])
+  T=eltype(p.coeff)
   handle_float(arr)=(tol=eval(Meta.parse("5e$(-digits)"));map(t->abs(t)<tol ? zero(T) : round(t, digits=digits), arr))
   if T <: AbstractFloat
     coeff=handle_float(p.coeff)
@@ -45,23 +45,23 @@ function Base.show(
     end
   end
 
-  (deg==0) && print(io,ms(coeff[1]))
+  (deg==0) && print(io,ms(coeff[0]))
 
 
   vars=if hasproperty(p,:pts)
     vcat(
       "",
       [ 
-        if iszero(pts[k+1])
+        if iszero(pts[k])
           var 
         else
-          if pts[k+1]>0
-            "($(var)-$(ms(pts[k+1])))"
+          if pts[k]>0
+            "($(var)-$(ms(pts[k])))"
           else
-            "($(var)+$(ms(-pts[k+1])))"
+            "($(var)+$(ms(-pts[k])))"
           end
         end 
-        for k in 0:deg-1 
+        for k in 0:deg-1
       ] |> cumprod
     )
   else
@@ -81,7 +81,7 @@ function Base.show(
   
   volt=false
   for i in idx
-    c=coeff[i+1]
+    c=coeff[i]
     iszero(c) && continue
     if volt
       print(io,(c<0 ? " - " : " + "))

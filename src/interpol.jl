@@ -15,7 +15,7 @@ function pre_interpol(t,f,kind::String; rtol=1e-9)
   T=typeof(t[1])
   for v in f
     if v isa Vector
-      T=promote_type(T,typeof(v[1]))
+      T=promote_type(T,eltype(v))
       ncond+=length(v)
     else
       T=promote_type(T,typeof(v))
