@@ -1,3 +1,6 @@
+"""
+    derivative
+"""
 function Base.adjoint(p::AbstractPol)
   hasproperty(p,:pts) && error("PolCore: derivative is not implemented for Newtonian-form")
   T=typeof(p.coeff[1])
@@ -8,7 +11,10 @@ function Base.adjoint(p::AbstractPol)
 end
 
 
-function Base.convert(PolC,p::PolN)
+"""
+    converts from Newton to classical
+"""
+function Base.convert(::Type{PolC},p::PolN)
   act=similar(p.coeff)
   prev=similar(p.coeff)
   n=length(p.coeff)

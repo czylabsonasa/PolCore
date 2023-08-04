@@ -1,9 +1,11 @@
+__precompile__()
+
+
 """
     module PolCore
     
 * minimalistic polynomial toolset
   * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
-* the coefficients are stored in increasing degree
 * "features":
   * types: PolC -> classical, PolN -> Newton-form
   * brute-force convert PolN to PolC (easier to comp. the derivative)
@@ -11,18 +13,45 @@
   * derivative by `adjoint` (the apostrophe)
   * Lagrangian interpolation: interpol_L
 """
-
 module PolCore
+
+"""
+    AbstractPol
+
+* the abstract type above all
+"""
   abstract type AbstractPol end
 
-  # classical-form
+
+@doc raw"""
+    struct PolC
+
+* field: `coeff::Vector{T}`
+* polynomials in classical-form: 
+```math
+p(x)=\sum_{k=0}^n coeff[k+1]x^k
+```
+"""
   struct PolC{T<:Real} <: AbstractPol
     coeff::Vector{T}
   end
   export PolC
 
 
-  # Newton
+@doc raw"""
+    struct PolN
+
+* fields: `coeff::Vector{T}` and `pts::Vector{T}`
+* polynomials in Newton-form: 
+```math
+p(x)=\sum_{k=0}^n coeff[k+1]n_k(x)
+```
+where
+```math
+n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i+1])
+```
+note, that the empty product is 1.
+"""
   struct PolN{T<:Real} <: AbstractPol
     coeff::Vector{T}
     pts::Vector{T}
