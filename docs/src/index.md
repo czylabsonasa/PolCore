@@ -12,13 +12,6 @@ Order   = [:type,:function]
 
 
 ### Examples
-* you can pass the example expressions to `include_string` as follows:
-```julia
-"""
-...the commands to be executed...
-""" |> x->include_string(Main,x)
-```
-
 
 ```jldoctest; output=false
 # construct a poly `p`, such that p(k)=k+1 for k=0,...,4 and p(4)=0

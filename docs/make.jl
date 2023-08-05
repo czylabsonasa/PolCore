@@ -1,6 +1,6 @@
 # from NumericSuffixes' make.jl
 
-#push!(LOAD_PATH,"../src/")
+push!(LOAD_PATH,"../src/")
 
 using Documenter, PolCore, DocumenterMarkdown
 
@@ -15,12 +15,15 @@ makedocs(
 #    clean = true,
 #    pages = Any["Home" => "index.md"],
 )
+
+
+
 # 
-deploydocs(
-    # target = "build",
-    # deps = nothing,
-    # make = nothing,
-    repo = "github.com/czylabsonasa/PolCore.jl.git",
-    versions=nothing,
-)
+# deploydocs(
+#     # target = "build",
+#     # deps = nothing,
+#     # make = nothing,
+#     repo = "github.com/czylabsonasa/PolCore.jl.git",
+#     versions=nothing,
+# )
 
