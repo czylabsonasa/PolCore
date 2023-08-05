@@ -27,7 +27,7 @@ module PolCore
       * Hermite-interpolation: `interpol_H`
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L4-L16' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L4-L16' class='documenter-source'>source</a><br>
 
 <a id='PolCore.AbstractPol' href='#PolCore.AbstractPol'>#</a>
 **`PolCore.AbstractPol`** &mdash; *Type*.
@@ -41,7 +41,7 @@ AbstractPol
   * the abstract type above all
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L19-L23' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L19-L23' class='documenter-source'>source</a><br>
 
 <a id='PolCore.AbstractPol-Tuple{Any}' href='#PolCore.AbstractPol-Tuple{Any}'>#</a>
 **`PolCore.AbstractPol`** &mdash; *Method*.
@@ -55,7 +55,7 @@ AbstractPol
   * evaluation by Horner
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L91-L95' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L91-L95' class='documenter-source'>source</a><br>
 
 <a id='PolCore.PolC' href='#PolCore.PolC'>#</a>
 **`PolCore.PolC`** &mdash; *Type*.
@@ -74,7 +74,7 @@ p(x)=\sum_{k=0}^n coeff[k+1]x^k
 $$
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L27-L35' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L27-L35' class='documenter-source'>source</a><br>
 
 <a id='PolCore.PolN' href='#PolCore.PolN'>#</a>
 **`PolCore.PolN`** &mdash; *Type*.
@@ -101,7 +101,7 @@ $$
 note, that the empty product is 1.
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L42-L55' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L42-L55' class='documenter-source'>source</a><br>
 
 <a id='Base.adjoint-Tuple{PolCore.AbstractPol}' href='#Base.adjoint-Tuple{PolCore.AbstractPol}'>#</a>
 **`Base.adjoint`** &mdash; *Method*.
@@ -115,7 +115,7 @@ derivative of polynomial
   * dp=p' (first the polynomial converted to classical form if neccessary)
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/tools.jl#L1-L5' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/tools.jl#L1-L5' class='documenter-source'>source</a><br>
 
 <a id='Base.convert-Tuple{Type{PolC}, PolN}' href='#Base.convert-Tuple{Type{PolC}, PolN}'>#</a>
 **`Base.convert`** &mdash; *Method*.
@@ -129,7 +129,7 @@ converts from Newton to classical
   * essentially Horner method -> brute force
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/tools.jl#L25-L29' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/tools.jl#L25-L29' class='documenter-source'>source</a><br>
 
 <a id='Base.show-Tuple{IO, PolCore.AbstractPol}' href='#Base.show-Tuple{IO, PolCore.AbstractPol}'>#</a>
 **`Base.show`** &mdash; *Method*.
@@ -148,7 +148,7 @@ Base.show(p::AbstractPol;<keyword arguments>)
   * sorry for the mess...
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/io.jl#L6-L14' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/io.jl#L6-L14' class='documenter-source'>source</a><br>
 
 <a id='PolCore.Pol' href='#PolCore.Pol'>#</a>
 **`PolCore.Pol`** &mdash; *Function*.
@@ -162,7 +162,7 @@ Pol(coeff,pts=[])
   * convenience function for contruct pol. from `Vector`s
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/PolCore.jl#L64-L68' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/PolCore.jl#L64-L68' class='documenter-source'>source</a><br>
 
 <a id='PolCore.interpol_H-Tuple{Any, Any}' href='#PolCore.interpol_H-Tuple{Any, Any}'>#</a>
 **`PolCore.interpol_H`** &mdash; *Method*.
@@ -186,7 +186,7 @@ scalar also acceptable.
   * rtol controls the equality for floats (relative tolerance)
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/interpol.jl#L80-L92' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/interpol.jl#L80-L92' class='documenter-source'>source</a><br>
 
 <a id='PolCore.interpol_L-Tuple{Any, Any}' href='#PolCore.interpol_L-Tuple{Any, Any}'>#</a>
 **`PolCore.interpol_L`** &mdash; *Method*.
@@ -205,7 +205,7 @@ interpol_L(t,f; <keyword args>)
   * rtol controls the equality for floats (relative tolerance)
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/interpol.jl#L50-L59' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/interpol.jl#L50-L59' class='documenter-source'>source</a><br>
 
 <a id='PolCore.pre_interpol-Tuple{Any, Any, String}' href='#PolCore.pre_interpol-Tuple{Any, Any, String}'>#</a>
 **`PolCore.pre_interpol`** &mdash; *Method*.
@@ -219,7 +219,7 @@ pre_interpol(t,f,kind; <keyword args>)
   * performs pre-checks/type promotions before interpolation
 
 
-<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/a19b23c4fe502f721d9cbdfaf21e828096e139ee/src/interpol.jl#L1-L5' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/czylabsonasa/PolCore/blob/38248be21504daa8fb7a4da787172e5d5a634ebe/src/interpol.jl#L1-L5' class='documenter-source'>source</a><br>
 
 
 <a id='Examples'></a>
@@ -266,9 +266,9 @@ you will/should see the result as:
 
 
 ```
-Construct a polynomial `p`, such that `ns(k)=k+1` for `k=0,...,3` and `ns(3)=0`, where 
-`ns(x)=x-p(x)/p'(x)` is the Newton-step. From the conditions: `p(k)=-p'(k)` for `k=0,...,2` and 
-`p(3)=3*p'(3)`. By setting `p'(k)=1` for `k=0,...,3` (an ad hoc choice) the p(k)'s are determined.
+Construct a polynomial p, such that ns(k)=k+1 for k=0,...,2 and ns(3)=0, where 
+ns(x)=x-p(x)/p'(x) is the Newton-step. From the conditions: p(k)=-p'(k) for k=0,...,2 and 
+p(3)=3*p'(3). By setting p'(k)=1 for k=0,...,3 (an ad hoc choice) the p(k)'s are determined.
 Use Hermite interpolation - executing the expression:
 ```
 

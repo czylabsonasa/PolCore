@@ -39,9 +39,9 @@ you will/should see the result as:
 
 #### Newton iteration
 ```
-Construct a polynomial `p`, such that `ns(k)=k+1` for `k=0,...,3` and `ns(3)=0`, where 
-`ns(x)=x-p(x)/p'(x)` is the Newton-step. From the conditions: `p(k)=-p'(k)` for `k=0,...,2` and 
-`p(3)=3*p'(3)`. By setting `p'(k)=1` for `k=0,...,3` (an ad hoc choice) the p(k)'s are determined.
+Construct a polynomial p, such that ns(k)=k+1 for k=0,...,2 and ns(3)=0, where 
+ns(x)=x-p(x)/p'(x) is the Newton-step. From the conditions: p(k)=-p'(k) for k=0,...,2 and 
+p(3)=3*p'(3). By setting p'(k)=1 for k=0,...,3 (an ad hoc choice) the p(k)'s are determined.
 Use Hermite interpolation - executing the expression:
 ```
 
