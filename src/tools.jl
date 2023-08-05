@@ -1,30 +1,43 @@
 """
-    derivative
+    derivative of polynomial
+
+* dp=p' (but the user should convert to PolC first)
 """
 function Base.adjoint(p::AbstractPol)
-  hasproperty(p,:pts) && error("PolCore: derivative is not implemented for Newtonian-form")
-  T=typeof(p.coeff[1])
-  coeff=p.coeff[2:end]
-  isempty(coeff) && (coeff=[zero(T)])
-  coeff=coeff.*(1:length(coeff))
-  Pol(coeff)
+  err(x)=error("derivative -> $(x)")
+  if hasproperty(p,:pts)
+    p=convert(PolC,p)
+  end
+  # err("not implemented for Newtonian-form")
+  T=eltype(p.coeff)
+  deg=length(p.coeff)-1
+  coeff=p.coeff[1:deg]
+  Pol(
+    if isempty(coeff) 
+      [zero(T)]
+    else
+      (coeff.*(1:deg))[:]
+    end
+  )
 end
 
 
 """
     converts from Newton to classical
+
+* essentially Horner method -> brute force
 """
 function Base.convert(::Type{PolC},p::PolN)
   act=similar(p.coeff)
   prev=similar(p.coeff)
-  n=length(p.coeff)
-  act[1]=p.coeff[n]
-  for k in n-1:-1:1
+  deg=length(p.coeff)-1
+  act[1]=p.coeff[deg+1]
+  for k in deg:-1:1
     act,prev=prev,act
     act[1]=p.coeff[k] # px -> ... + coeff[k]
-    act[2:n-k+1]=prev[1:n-k] # px -> px*x
-    act[1:n-k].-=p.pts[k]*prev[1:n-k]
+    act[2:deg-k+1]=prev[1:deg-k] # px -> px*x
+    act[1:deg-k].-=p.pts[k]*prev[1:deg-k]
   end
-  PolC{typeof(act[1])}(act)
+  PolC(act)
   
 end

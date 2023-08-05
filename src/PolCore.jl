@@ -1,4 +1,4 @@
-__precompile__()
+# __precompile__()
 
 
 """
@@ -7,14 +7,15 @@ __precompile__()
 * minimalistic polynomial toolset
   * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
 * "features":
-  * types: PolC -> classical, PolN -> Newton-form
-  * brute-force convert PolN to PolC (easier to comp. the derivative)
+  * types: `PolC` -> classical, `PolN` -> Newton-form (plain Vector based types)
+  * brute-force convert `PolN` to `PolC` (easier to comp. the derivative)
   * evaluation by `()`
   * derivative by `adjoint` (the apostrophe)
-  * Lagrangian interpolation: interpol_L
+  * Lagrange-interpolation: `interpol_L`
+  * Hermite-interpolation: `interpol_H`
 """
 module PolCore
-
+   
 """
     AbstractPol
 
@@ -27,7 +28,7 @@ module PolCore
     struct PolC
 
 * field: `coeff::Vector{T}`
-* polynomials in classical-form: 
+* represents a polynomial in classical-form: 
 ```math
 p(x)=\sum_{k=0}^n coeff[k+1]x^k
 ```
@@ -42,7 +43,7 @@ p(x)=\sum_{k=0}^n coeff[k+1]x^k
     struct PolN
 
 * fields: `coeff::Vector{T}` and `pts::Vector{T}`
-* polynomials in Newton-form: 
+* represents a polynomial in Newton-form: 
 ```math
 p(x)=\sum_{k=0}^n coeff[k+1]n_k(x)
 ```
@@ -60,35 +61,45 @@ note, that the empty product is 1.
 
 
 
+@doc """
+    Pol
 
-  function Pol(coeff,pts=[])
+* convenience function for contruct pol. from (plain) `Vector`s
+"""
+  function Pol(coeff::Vector,pts::Vector=[])
     #printstyled("$(length(pts)) --- $(length(coeff))\n",color=:light_green);flush(stdout)
     err(x)=error("Pol -> $(x)")
     isempty(coeff) && err("empty coeff vector")
-    T=typeof(coeff[1])
+    T=eltype(coeff)
+    deg=length(coeff)-1
     if isempty(pts) 
-      PolC{T}(coeff[:])
+      PolC{T}(coeff)
     else
       #println(length(coeff)," ",length(pts))
       (length(coeff)!=length(pts)) && err("if pts>[] then it must be length(coeff) sized")
-      T=promote_type(T,typeof(pts[1]))
-      PolN{T}(T.(coeff[:]),T.(pts[:]))
+      T=promote_type(T,eltype(pts))
+      PolN{T}(coeff,pts)
     end
+  end
+
+  function Pol(coeff,pts=[])
+    Pol(Vector(coeff),Vector(pts))
   end
   export Pol
 
 
   # evaluation by Horner 
   function (p::AbstractPol)(x)
-    np=length(p.coeff)
     rule=if hasproperty(p, :pts)
       (px,k)->px*(x-p.pts[k])+p.coeff[k]
     else
       (px,k)->px*x+p.coeff[k]
     end
 
-    px=p.coeff[np]
-    @inbounds for k in np-1:-1:1
+    deg=length(p.coeff)-1
+
+    px=p.coeff[deg+1]
+    @inbounds for k in deg:-1:1
       px=rule(px,k)
     end
     px
