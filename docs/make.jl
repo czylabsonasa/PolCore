@@ -1,4 +1,5 @@
 # from NumericSuffixes' make.jl
+# (it is the simplest among the examples)
 
 push!(LOAD_PATH,"../src/")
 
@@ -11,7 +12,6 @@ makedocs(
     modules = PolCore,
     #format = Documenter.HTML(),
     format = Markdown(),
-    
     clean = true,
 #    pages = Any["Home" => "index.md"],
 )

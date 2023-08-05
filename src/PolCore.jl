@@ -95,11 +95,11 @@ note, that the empty product is 1.
 """
   function (p::AbstractPol)(x)
     rule=if hasproperty(p, :pts)
-      #(px,k)->px*(x-p.pts[k])+p.coeff[k]
-      (px,k)->Base.muladd(px,(x-p.pts[k]),p.coeff[k])
+      (px,k)->px*(x-p.pts[k])+p.coeff[k]
+      #(px,k)->Base.muladd(px,(x-p.pts[k]),p.coeff[k])
     else
-      #(px,k)->px*x+p.coeff[k]
-      (px,k)->Base.muladd(px,x,p.coeff[k])
+      (px,k)->px*x+p.coeff[k]
+      #(px,k)->Base.muladd(px,x,p.coeff[k])
     end
 
     deg=length(p.coeff)-1
