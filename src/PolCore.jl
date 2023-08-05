@@ -88,7 +88,7 @@ note, that the empty product is 1.
     end
 
     px=p.coeff[np]
-    for k in np-1:-1:1
+    @inbounds for k in np-1:-1:1
       px=rule(px,k)
     end
     px
