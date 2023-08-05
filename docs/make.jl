@@ -12,7 +12,7 @@ makedocs(
     #format = Documenter.HTML(),
     format = Markdown(),
     
-#    clean = true,
+    clean = true,
 #    pages = Any["Home" => "index.md"],
 )
 
