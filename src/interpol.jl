@@ -1,7 +1,7 @@
 """
     pre_interpol(t,f,kind; <keyword args>)
 
-* performs pre-checks before interpolation
+* performs pre-checks/type promotions before interpolation
 """
 function pre_interpol(t,f,kind::String; rtol=1e-9)
   err(x)=error("$(kind) -> $(x)")
@@ -12,7 +12,7 @@ function pre_interpol(t,f,kind::String; rtol=1e-9)
   (length(st)!=lt) && err("t has equal elements")
 
   ncond=0
-  T=typeof(t[1])
+  T=eltype(t)
   for v in f
     if v isa Vector
       T=promote_type(T,eltype(v))
@@ -55,7 +55,7 @@ end
 
 # Arguments
 
-* rtol controls the equality for floats (realtive tolerance)
+* rtol controls the equality for floats (relative tolerance)
 """
 function interpol_L(t,f; rtol=1e-9)
   T,comp_mode,n=pre_interpol(t,f,"interp_L"; rtol=rtol)
@@ -88,7 +88,7 @@ end
 * f is a vector of vectors - but for points where only the function value (f^(0)) is known, a plain 
 scalar also acceptable.
 
-* rtol controls the equality for floats (realtive tolerance)
+* rtol controls the equality for floats (relative tolerance)
 """
 function interpol_H(tt,ff; rtol=1e-9)
   T,comp_mode,n=pre_interpol(tt,ff,"interp_H"; rtol=rtol)

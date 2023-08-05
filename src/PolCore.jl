@@ -7,12 +7,13 @@
 * minimalistic polynomial toolset
   * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
 * "features":
-  * types: PolC -> classical, PolN -> Newton-form
+  * types: `PolC` -> classical, `PolN` -> Newton-form
     * both are OffsetArray based
-  * brute-force convert PolN to PolC (easier to comp. the derivative)
+  * brute-force convert `PolN` to `PolC` (easier to comp. the derivative)
   * evaluation by `()`
   * derivative by `adjoint` (the apostrophe)
-  * Lagrangian interpolation: interpol_L
+  * Lagrange-interpolation: `interpol_L`
+  * Hermite-interpolation: `interpol_H`
 """
 module PolCore
     using OffsetArrays
@@ -29,7 +30,7 @@ module PolCore
     struct PolC
 
 * field: `coeff::OffsetArray{T}`
-* polynomials in classical-form: 
+* represents a polynomial in classical-form: 
 ```math
 p(x)=\sum_{k=0}^n coeff[k]x^k
 ```
@@ -43,14 +44,14 @@ p(x)=\sum_{k=0}^n coeff[k]x^k
 @doc raw"""
     struct PolN
 
-* fields: `coeff::Vector{T}` and `pts::Vector{T}`
-* polynomials in Newton-form: 
+* fields: `coeff::OffsetArray{T}` and `pts::OffsetArray{T}`
+* represents a polynomial in Newton-form: 
 ```math
-p(x)=\sum_{k=0}^n coeff[k+1]n_k(x)
+p(x)=\sum_{k=0}^n coeff[k]n_k(x)
 ```
 where
 ```math
-n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i+1])
+n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i])
 ```
 note, that the empty product is 1.
 """
@@ -62,8 +63,12 @@ note, that the empty product is 1.
 
 
 
+@doc """
+    Pol
 
-  function Pol(coeff,pts=[])
+* convenience function for contruct pol. from (plain) `Vector`s
+"""
+  function Pol(coeff::Vector,pts::Vector=[])
     #printstyled("$(length(pts)) --- $(length(coeff))\n",color=:light_green);flush(stdout)
     err(x)=error("Pol -> $(x)")
     isempty(coeff) && err("empty coeff vector")
@@ -74,12 +79,16 @@ note, that the empty product is 1.
     else
       #println(length(coeff)," ",length(pts))
       (length(coeff)!=length(pts)) && err("if pts>[] then it must be length(coeff) sized")
-      T=promote_type(T,typeof(pts[1]))
+      T=promote_type(T,eltype(pts))
       PolN{T}(
         OffsetArray{T}(coeff,0:deg),
         OffsetArray{T}(pts,0:deg),
       )
     end
+  end
+
+  function Pol(coeff,pts=[])
+    Pol(Vector(coeff),Vector(pts))
   end
   export Pol
 
@@ -91,10 +100,11 @@ note, that the empty product is 1.
     else
       (px,k)->px*x+p.coeff[k]
     end
+
     deg=length(p.coeff)-1
 
     px=p.coeff[deg]
-    for k in deg-1:-1:0
+    @inbounds for k in deg-1:-1:0
       px=rule(px,k)
     end
     px
