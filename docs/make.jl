@@ -10,13 +10,15 @@ makedocs(
     sitename = "PolCore.jl",
     modules = PolCore,
     format = Documenter.HTML(),
-    clean = true,
+#    clean = true,
 #    pages = Any["Home" => "index.md"],
 )
 # 
-# deploydocs(
+deploydocs(
     # target = "build",
     # deps = nothing,
     # make = nothing,
-    # repo = "github.com/czylabsonasa/PolCore.jl.git",
-# )
+    repo = "github.com/czylabsonasa/PolCore.jl.git",
+    versions=nothing,
+)
+

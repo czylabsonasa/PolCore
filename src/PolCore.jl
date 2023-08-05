@@ -62,7 +62,7 @@ note, that the empty product is 1.
 
 
 @doc """
-    Pol
+    Pol(coeff,pts=[])
 
 * convenience function for contruct pol. from `Vector`s
 """
@@ -88,7 +88,11 @@ note, that the empty product is 1.
   export Pol
 
 
-  # evaluation by Horner 
+@doc """
+    (AbstractPol)(x)  
+
+* evaluation by Horner
+"""
   function (p::AbstractPol)(x)
     rule=if hasproperty(p, :pts)
       #(px,k)->px*(x-p.pts[k])+p.coeff[k]
