@@ -30,7 +30,6 @@ function Base.show(
   end
 
   
-  deg=length(p.coeff)-1
 
   T=eltype(p.coeff)
   handle_float(arr)=(tol=eval(Meta.parse("5e$(-digits)"));map(t->abs(t)<tol ? zero(T) : round(t, digits=digits), arr))
@@ -46,7 +45,8 @@ function Base.show(
     end
   end
 
-  (deg==0) && (print(io,ms(coeff[0]));return)
+  deg=length(p.coeff)-1
+  (deg==0) && (print(io,ms(coeff[1]));return)
 
 
   vars=if hasproperty(p,:pts)
@@ -62,7 +62,7 @@ function Base.show(
             "($(var)+$(ms(-pts[k])))"
           end
         end 
-        for k in 0:deg-1
+        for k in 1:deg
       ] |> cumprod
     )
   else
@@ -82,7 +82,7 @@ function Base.show(
   
   volt=false
   for i in idx
-    c=coeff[i]
+    c=coeff[i+1]
     iszero(c) && continue
     if volt
       print(io,(c<0 ? " - " : " + "))

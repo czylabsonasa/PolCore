@@ -5,7 +5,10 @@
 """
 function Base.adjoint(p::AbstractPol)
   err(x)=error("derivative -> $(x)")
-  hasproperty(p,:pts) && err("not implemented for Newtonian-form")
+  if hasproperty(p,:pts)
+    p=convert(PolC,p)
+  end
+  # err("not implemented for Newtonian-form")
   T=eltype(p.coeff)
   deg=length(p.coeff)-1
   coeff=p.coeff[1:deg]
@@ -28,12 +31,12 @@ function Base.convert(::Type{PolC},p::PolN)
   act=similar(p.coeff)
   prev=similar(p.coeff)
   deg=length(p.coeff)-1
-  act[0]=p.coeff[deg]
-  for k in deg-1:-1:0
+  act[1]=p.coeff[deg+1]
+  for k in deg:-1:1
     act,prev=prev,act
-    act[0]=p.coeff[k] # px -> ... + coeff[k]
-    act[1:deg-k]=prev[0:deg-k-1] # px -> px*x
-    act[0:deg-k-1].-=p.pts[k]*prev[0:deg-k-1]
+    act[1]=p.coeff[k] # px -> ... + coeff[k]
+    act[2:deg-k+1]=prev[1:deg-k] # px -> px*x
+    act[1:deg-k].-=p.pts[k]*prev[1:deg-k]
   end
   PolC(act)
   

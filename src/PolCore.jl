@@ -7,8 +7,7 @@
 * minimalistic polynomial toolset
   * reason why: did not find a Newtonian-form polynomial+generalized Horner evaluator (for Hermite interpolation)
 * "features":
-  * types: `PolC` -> classical, `PolN` -> Newton-form
-    * both are OffsetArray based
+  * types: `PolC` -> classical, `PolN` -> Newton-form (plain Vector based types)
   * brute-force convert `PolN` to `PolC` (easier to comp. the derivative)
   * evaluation by `()`
   * derivative by `adjoint` (the apostrophe)
@@ -16,8 +15,7 @@
   * Hermite-interpolation: `interpol_H`
 """
 module PolCore
-    using OffsetArrays
-    
+   
 """
     AbstractPol
 
@@ -29,14 +27,14 @@ module PolCore
 @doc raw"""
     struct PolC
 
-* field: `coeff::OffsetArray{T}`
+* field: `coeff::Vector{T}`
 * represents a polynomial in classical-form: 
 ```math
-p(x)=\sum_{k=0}^n coeff[k]x^k
+p(x)=\sum_{k=0}^n coeff[k+1]x^k
 ```
 """
   struct PolC{T<:Real} <: AbstractPol
-    coeff::OffsetArray{T}
+    coeff::Vector{T}
   end
   export PolC
 
@@ -44,20 +42,20 @@ p(x)=\sum_{k=0}^n coeff[k]x^k
 @doc raw"""
     struct PolN
 
-* fields: `coeff::OffsetArray{T}` and `pts::OffsetArray{T}`
+* fields: `coeff::Vector{T}` and `pts::Vector{T}`
 * represents a polynomial in Newton-form: 
 ```math
-p(x)=\sum_{k=0}^n coeff[k]n_k(x)
+p(x)=\sum_{k=0}^n coeff[k+1]n_k(x)
 ```
 where
 ```math
-n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i])
+n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i+1])
 ```
 note, that the empty product is 1.
 """
   struct PolN{T<:Real} <: AbstractPol
-    coeff::OffsetArray{T}
-    pts::OffsetArray{T}
+    coeff::Vector{T}
+    pts::Vector{T}
   end
   export PolN
 
@@ -75,15 +73,12 @@ note, that the empty product is 1.
     T=eltype(coeff)
     deg=length(coeff)-1
     if isempty(pts) 
-      PolC{T}(OffsetArray{T}(coeff,0:deg))
+      PolC{T}(coeff)
     else
       #println(length(coeff)," ",length(pts))
       (length(coeff)!=length(pts)) && err("if pts>[] then it must be length(coeff) sized")
       T=promote_type(T,eltype(pts))
-      PolN{T}(
-        OffsetArray{T}(coeff,0:deg),
-        OffsetArray{T}(pts,0:deg),
-      )
+      PolN{T}(coeff,pts)
     end
   end
 
@@ -103,8 +98,8 @@ note, that the empty product is 1.
 
     deg=length(p.coeff)-1
 
-    px=p.coeff[deg]
-    @inbounds for k in deg-1:-1:0
+    px=p.coeff[deg+1]
+    @inbounds for k in deg:-1:1
       px=rule(px,k)
     end
     px
