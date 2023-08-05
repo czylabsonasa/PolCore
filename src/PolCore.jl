@@ -64,7 +64,7 @@ note, that the empty product is 1.
 @doc """
     Pol
 
-* convenience function for contruct pol. from (plain) `Vector`s
+* convenience function for contruct pol. from `Vector`s
 """
   function Pol(coeff::Vector,pts::Vector=[])
     #printstyled("$(length(pts)) --- $(length(coeff))\n",color=:light_green);flush(stdout)
@@ -91,9 +91,11 @@ note, that the empty product is 1.
   # evaluation by Horner 
   function (p::AbstractPol)(x)
     rule=if hasproperty(p, :pts)
-      (px,k)->px*(x-p.pts[k])+p.coeff[k]
+      #(px,k)->px*(x-p.pts[k])+p.coeff[k]
+      (px,k)->Base.muladd(px,(x-p.pts[k]),p.coeff[k])
     else
-      (px,k)->px*x+p.coeff[k]
+      #(px,k)->px*x+p.coeff[k]
+      (px,k)->Base.muladd(px,x,p.coeff[k])
     end
 
     deg=length(p.coeff)-1
