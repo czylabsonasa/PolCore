@@ -49,27 +49,61 @@ function Base.show(
   (deg==0) && (print(io,ms(coeff[1]));return)
 
 
+  # vars=if hasproperty(p,:pts)
+  #   tmp=vcat(
+  #     "",
+  #     [ 
+  #       if iszero(pts[k])
+  #         var 
+  #       else
+  #         if pts[k]>0
+  #           "($(var)-$(ms(pts[k])))"
+  #         else
+  #           "($(var)+$(ms(-pts[k])))"
+  #         end
+  #       end 
+  #       for k in 1:deg
+  #     ]
+  #   )
+  # else
+  #   vcat(["",var],["$(var)^$(k)" for k in 2:deg])
+  # end
+
+
+
+  # the plain cumprod version is wrong
   vars=if hasproperty(p,:pts)
-    vcat(
-      "",
-      [ 
-        if iszero(pts[k])
-          var 
-        else
-          if pts[k]>0
-            "($(var)-$(ms(pts[k])))"
-          else
-            "($(var)+$(ms(-pts[k])))"
-          end
-        end 
-        for k in 1:deg
-      ] |> cumprod
-    )
+    genterm(k)=if iszero(pts[k])
+      var 
+    else
+      if pts[k]>0
+        "($(var)-$(ms(pts[k])))"
+      else
+        "($(var)+$(ms(-pts[k])))"
+      end
+    end 
+
+    trm,ftrm=genterm(1),1
+    atrm=""
+    tmp=[trm]
+    for k in 2:deg
+      if pts[k]==pts[k-1]
+        ftrm+=1
+        push!(tmp, atrm*"$(trm)^$(ftrm)")
+      else
+        atrm=(ftrm>1 ? "$(atrm)$(trm)^$(ftrm)" : "$(atrm)$(trm)")
+        trm,ftrm=genterm(k),1
+        push!(tmp, "$(atrm)$(trm)")
+      end
+    end
+    vcat("",tmp)    
   else
     vcat(["",var],["$(var)^$(k)" for k in 2:deg])
   end
 
 
+
+ 
   idx=if order===:inc 
     0:deg
   elseif order===:dec

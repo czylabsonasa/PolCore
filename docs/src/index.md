@@ -15,7 +15,7 @@ Order   = [:type,:function]
 
 #### fixed-point iteration
 ```
-Construct a polynomial `p`, such that p(k)=k+1 for k=0,...,4 and p(4)=0. 
+Construct a polynomial `p`, such that p(k)=k+1 for k=0,...,3 and p(4)=0. 
 Use Lagrange interpolation - executing the expression:
 ```
 
@@ -41,24 +41,23 @@ you will/should see the result as:
 ```
 Construct a polynomial p, such that ns(k)=k+1 for k=0,...,2 and ns(3)=0, where 
 ns(x)=x-p(x)/p'(x) is the Newton-step. From the conditions: p(k)=-p'(k) for k=0,...,2 and 
-p(3)=3*p'(3). By setting p'(k)=1 for k=0,...,3 (an ad hoc choice) the p(k)'s are determined.
+p(3)=3*p'(3). By setting p'(k)=1 for k=0,...,3 (an ad hoc choice) the p(k)-s are determined.
 Use Hermite interpolation - executing the expression:
 ```
 
 ```jldoctest; output=false
 using PolCore
 p=interpol_H([0,1,2,3],[[-1,1],[-1,1],[-1,1],[3,1]])
-p=convert(PolC,p) # not a must, but the string form of Newton polynomials has some issue...
 dp=p'
 ns(x)=x-p(x)/dp(x)
 (p, all(ns.([0,1,2,3]).==[1,2,3,0]))
 
 # output
-(-1 + x - 73/6*x^2 + 1463/54*x^3 - 220/9*x^4 + 563/54*x^5 - 37/18*x^6 + 4/27*x^7, true)
+(-1 + x - x^2 + 2*x^2(x-1) - 3/2*x^2(x-1)^2 + 3/2*x^2(x-1)^2(x-2) - 13/18*x^2(x-1)^2(x-2)^2 + 4/27*x^2(x-1)^2(x-2)^2(x-3), true)
 
 ```
 
 ```
 you will/should see the result as:
-(-1 + x - 73/6*x^2 + 1463/54*x^3 - 220/9*x^4 + 563/54*x^5 - 37/18*x^6 + 4/27*x^7, true)
+(-1 + x - x^2 + 2*x^2(x-1) - 3/2*x^2(x-1)^2 + 3/2*x^2(x-1)^2(x-2) - 13/18*x^2(x-1)^2(x-2)^2 + 4/27*x^2(x-1)^2(x-2)^2(x-3), true)
 ```
