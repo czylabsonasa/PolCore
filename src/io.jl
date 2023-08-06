@@ -3,6 +3,22 @@
 # 
 
 using StatsBase # not a must, used only to order=:rand
+
+ms(x::Rational)=if x.den==1
+  ms(x.num)
+else
+  "$(x)"
+end
+
+ms(x::Complex)="($(x))"
+ms(x)="$(x)"
+
+takeit(x::AbstractFloat; digits=4)=abs(x)<5*10.0^(-digits) ? 0.0 : round(x, digits=digits)
+takeit(x::Complex; digits=4)=Complex(takeit(x.re,digits=digits),takeit(x.im,digits=digits))
+takeit(x; digits=4)=x
+
+
+
 """
     Base.show(p::AbstractPol;<keyword arguments>)
 
@@ -19,71 +35,33 @@ function Base.show(
   order=:inc,
   digits=4
 )
-  ms(x)=if x isa Rational
-    if x.den==1
-      "$(x.num)"
-    else
-      "$(x.num)/$(x.den)"
-    end
-  else
-    "$(x)"
-  end
 
-  
 
-  T=eltype(p.coeff)
-  handle_float(arr)=(tol=eval(Meta.parse("5e$(-digits)"));map(t->abs(t)<tol ? zero(T) : round(t, digits=digits), arr))
-  if T <: AbstractFloat
-    coeff=handle_float(p.coeff)
-    if hasproperty(p,:pts)
-      pts=handle_float(p.pts)
-    end
-  else
-    coeff=p.coeff
-    if hasproperty(p,:pts)
-      pts=p.pts
-    end
+  coeff=takeit.(p.coeff; digits=digits)
+  if hasproperty(p,:pts)
+    pts=takeit.(p.pts; digits=digits)
   end
 
   deg=length(p.coeff)-1
   (deg==0) && (print(io,ms(coeff[1]));return)
 
+  genterm(x::Real)=if iszero(x)
+    var
+  elseif x>0
+    "($(var)-$(ms(x)))"
+  else
+    "($(var)+$(ms(-x)))"
+  end
 
-  # vars=if hasproperty(p,:pts)
-  #   tmp=vcat(
-  #     "",
-  #     [ 
-  #       if iszero(pts[k])
-  #         var 
-  #       else
-  #         if pts[k]>0
-  #           "($(var)-$(ms(pts[k])))"
-  #         else
-  #           "($(var)+$(ms(-pts[k])))"
-  #         end
-  #       end 
-  #       for k in 1:deg
-  #     ]
-  #   )
-  # else
-  #   vcat(["",var],["$(var)^$(k)" for k in 2:deg])
-  # end
+  genterm(x)=if iszero(x)
+    var
+  else
+    "($(var)-$(ms(x)))"
+  end
 
 
-
-  # the plain cumprod version is wrong
   vars=if hasproperty(p,:pts)
-    genterm(k)=if iszero(pts[k])
-      var 
-    else
-      if pts[k]>0
-        "($(var)-$(ms(pts[k])))"
-      else
-        "($(var)+$(ms(-pts[k])))"
-      end
-    end 
-
-    trm,ftrm=genterm(1),1
+    trm,ftrm=genterm(pts[1]),1
     atrm=""
     tmp=[trm]
     for k in 2:deg
@@ -92,7 +70,7 @@ function Base.show(
         push!(tmp, atrm*"$(trm)^$(ftrm)")
       else
         atrm=(ftrm>1 ? "$(atrm)$(trm)^$(ftrm)" : "$(atrm)$(trm)")
-        trm,ftrm=genterm(k),1
+        trm,ftrm=genterm(pts[k]),1
         push!(tmp, "$(atrm)$(trm)")
       end
     end
@@ -115,27 +93,39 @@ function Base.show(
   end
   
   volt=false
-  for i in idx
-    c=coeff[i+1]
-    iszero(c) && continue
-    if volt
-      print(io,(c<0 ? " - " : " + "))
-    else
-      print(io,(c<0 ? "-" : ""))
-      volt=true
-    end
-    ac=abs(c)
+  if eltype(coeff)<:Real
+    for i in idx
+      c=coeff[i+1]
+      iszero(c) && continue
+      if volt
+        print(io,(c<0 ? " - " : " + "))
+      else
+        print(io,(c<0 ? "-" : ""))
+        volt=true
+      end
+      ac=abs(c)
 
-    non1=(ac!=1)
-    non1 && print(io,ms(ac))
-    if i>0
-      non1 && print(io, "*")
-    else
-      (ac==1) && print(io,"1")
+      non1=(ac!=1)
+      non1 && print(io,ms(ac))
+      if i>0
+        non1 && print(io, "*")
+      else
+        (ac==1) && print(io,"1")
+      end
+      print(io,vars[i+1])
     end
-    print(io,vars[i+1])
+  else
+    for i in idx
+      c=coeff[i+1]
+      iszero(c) && continue
+      if volt
+        print(io," + ")
+      else
+        volt=true
+      end
+      print(io,"$(ms(c))"*(i!=0 ? "*$(vars[i+1])" : ""))
+    end
   end
-
 end
 
 

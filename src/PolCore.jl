@@ -33,7 +33,7 @@ module PolCore
 p(x)=\sum_{k=0}^n coeff[k+1]x^k
 ```
 """
-  struct PolC{T<:Real} <: AbstractPol
+  struct PolC{T<:Number} <: AbstractPol
     coeff::Vector{T}
   end
   export PolC
@@ -53,7 +53,7 @@ n_{k}(x)=\prod_{i=0}^{k-1} (x-pts[i+1])
 ```
 note, that the empty product is 1.
 """
-  struct PolN{T<:Real} <: AbstractPol
+  struct PolN{T<:Number} <: AbstractPol
     coeff::Vector{T}
     pts::Vector{T}
   end
@@ -95,11 +95,11 @@ note, that the empty product is 1.
 """
   function (p::AbstractPol)(x)
     rule=if hasproperty(p, :pts)
-      (px,k)->px*(x-p.pts[k])+p.coeff[k]
-      #(px,k)->Base.muladd(px,(x-p.pts[k]),p.coeff[k])
+      #(px,k)->px*(x-p.pts[k])+p.coeff[k]
+      (px,k)->Base.muladd(px,(x-p.pts[k]),p.coeff[k])
     else
-      (px,k)->px*x+p.coeff[k]
-      #(px,k)->Base.muladd(px,x,p.coeff[k])
+      #(px,k)->px*x+p.coeff[k]
+      (px,k)->Base.muladd(px,x,p.coeff[k])
     end
 
     deg=length(p.coeff)-1
