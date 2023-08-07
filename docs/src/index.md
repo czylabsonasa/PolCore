@@ -15,7 +15,7 @@ Order   = [:type,:function]
 
 #### sum of powers
 ```
-Construct a polynomial (a formula) `p`, such that p_d(k)=1^d+...+k^d for k=1,...,3.
+Construct a "sum of powers" polynomial `p_d`, such that p_d(k)=1^d+...+k^d for d=1,...,3.
 Use Lagrange interpolation - executing the expression:
 ```
 
