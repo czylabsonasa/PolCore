@@ -92,6 +92,7 @@ function Base.show(
     error("string(polcore): unsupported order par. -> $(order)")
   end
   
+  # this if-else is ugly...and long
   volt=false
   if eltype(coeff)<:Real
     for i in idx
